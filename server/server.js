@@ -21,12 +21,20 @@ app.post('/api/generative-quiz',async(req, res) => {
 
     try{
         // use pro model of gemini
-        const model = GenAI.getGenerativeModel({model:'gemini-pro'});
+        const model = GenAI.getGenerativeModel({model:'gemini-1.5-flash'});
         const prompt = `Generate a ${numQuestions} question quiz about  ${topic}. This should be in a JSON array format. Each object in the array should have 'question', 'options' (an array), and 'answer' (the correct option).`;
         const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
-        const quizData = JSON.parse(text);
+        // const response = await result.response;
+        const text =  result.response.text();
+
+        // console.log("AI Raw Output: ",text);
+
+        // clean markdown fences if present
+        let cleanedtext = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        //optimal 
+        cleanedtext = cleanedtext.replace(/```js/g, '').trim();
+    
+        const quizData = JSON.parse(cleanedtext);
 
         res.json(quizData);
     }
