@@ -15,23 +15,24 @@ const GenAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 app.post('/api/generative-quiz',async(req, res) => {
     const {topic, numQuestions} = req.body;
+    
     if(!topic){
         res.status(400).json({error:'Topic is required'});
+        return; 
     }
 
     try{
-        // use pro model of gemini
-        const model = GenAI.getGenerativeModel({model:'gemini-1.5-flash'});
-        const prompt = `Generate a ${numQuestions} question quiz about  ${topic}. This should be in a JSON array format. Each object in the array should have 'question', 'options' (an array), and 'answer' (the correct option).`;
+        // *** FIX: Changed model identifier to a stable, supported model ***
+        const model = GenAI.getGenerativeModel({model:'gemini-2.5-flash'});
+        // ***************************************************************
+        
+        const prompt = `Generate a ${numQuestions} question quiz about ${topic}. This should be in a JSON array format. Do not include any text before or after the JSON. Each object in the array must have 'question', 'options' (an array of strings), and 'answer' (the correct option string).`;
+        
         const result = await model.generateContent(prompt);
-        // const response = await result.response;
-        const text =  result.response.text();
+        const text = result.response.text();
 
-        // console.log("AI Raw Output: ",text);
-
-        // clean markdown fences if present
+        // Clean the text to remove markdown code fences
         let cleanedtext = text.replace(/```json/g, '').replace(/```/g, '').trim();
-        //optimal 
         cleanedtext = cleanedtext.replace(/```js/g, '').trim();
     
         const quizData = JSON.parse(cleanedtext);
@@ -39,7 +40,8 @@ app.post('/api/generative-quiz',async(req, res) => {
         res.json(quizData);
     }
     catch(err){
-        console.error('Error generating quiz:', err);
+        // Log the specific error message for debugging
+        console.error('Error generating quiz:', err.message || err);
         res.status(500).json({error : 'Failed to generate quiz'});
     }
 });
