@@ -41,7 +41,7 @@ function App() {
 
     try {
       // Endpoint confirmed to match server.js
-      const response = await fetch('/api/generative-quiz', {
+      const response = await fetch('/api/generate-quiz', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
