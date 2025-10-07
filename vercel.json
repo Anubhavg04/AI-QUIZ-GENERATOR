@@ -4,20 +4,22 @@
 {
 "src": "client/package.json",
 "use": "@vercel/static-build",
-"config": { "outputDirectory": "build" }
+"config": {
+"outputDirectory": "build"
+}
 },
 {
-"src": "server/server.js",
+"src": "server/api/generate.js",
 "use": "@vercel/node"
 }
 ],
 "routes": [
 {
-"src": "/api/(.)",
-"dest": "server/server.js"
+"src": "/api/generate",
+"dest": "server/api/generate.js"
 },
 {
-"src": "/(.)",
+"src": "/(.*)",
 "dest": "client/build/$1"
 }
 ]
