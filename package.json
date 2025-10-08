@@ -18,5 +18,11 @@
   "bugs": {
     "url": "https://github.com/Anubhavg04/AI-QUIZ-GENERATOR/issues"
   },
-  "homepage": "https://github.com/Anubhavg04/AI-QUIZ-GENERATOR#readme"
+  "homepage": "https://github.com/Anubhavg04/AI-QUIZ-GENERATOR#readme",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0"
+  }
 }
